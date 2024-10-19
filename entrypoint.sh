@@ -3,6 +3,8 @@
 # Echo message indicating the custom action is running
 echo "This is my custom action. :@"
 
+git config --global --add safe.directory /github/workspace
+
 # Check if README.md file exists, create it if not
 if [ ! -f "README.md" ]; then
   echo "Creating README.md file..."
