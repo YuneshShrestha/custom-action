@@ -3,6 +3,17 @@
 # Echo message indicating the custom action is running
 echo "This is my custom action. :@"
 
+# Install curl and jq if not installed
+if ! command -v curl &> /dev/null; then
+    echo "Installing curl..."
+    sudo apt-get update && sudo apt-get install -y curl
+fi
+
+if ! command -v jq &> /dev/null; then
+    echo "Installing jq..."
+    sudo apt-get update && sudo apt-get install -y jq
+fi
+
 # Configure Git to trust the /github/workspace directory
 git config --global --add safe.directory /github/workspace
 
