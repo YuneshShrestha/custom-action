@@ -24,17 +24,10 @@ if [ ! -f "README.md" ]; then
 
   # Call OpenAI API to get content
   API_KEY=$OPENAI_API_KEY # Use the secret for the API key
-  RESPONSE=$(curl -s -X POST https://api.openai.com/v1/chat/completions \
-    -H "Authorization: Bearer $API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{
-      "model": "gpt-3.5-turbo",
-      "messages": [{"role": "user", "content": "'"$PROMPT"'"}],
-      "max_tokens": 150
-    }')
+  RESPONSE=$(curl -H 'Content-Type: application/json' -d '{"contents":[{"parts":[{"text":  "'"$PROMPT"'"}]}]}' -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyB8m4NaeJHGvOFk5jg90M_RMKxoTKA7rzU')
   echo "Response from Open AI: $RESPONSE"
   # Extract the generated text from the API response
-  GENERATED_CONTENT=$(echo $RESPONSE | jq -r '.choices[0].message.content')
+  GENERATED_CONTENT=$(echo $RESPONSE | jq -r '.candidates[0].content.parts[0].text')
 
   # Append the generated content to the README
   echo -e "\n## Description" >> README.md
