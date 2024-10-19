@@ -22,7 +22,7 @@ if [ ! -f "README.md" ]; then
   PROMPT="$PROMPT\n$FILE_LIST"
 
   # Call OpenAI API to get content
-  API_KEY=${{ secrets.OPENAI_API_KEY }}  # Use the secret for the API key
+  API_KEY=$OPENAI_API_KEY # Use the secret for the API key
   RESPONSE=$(curl -s -X POST https://api.openai.com/v1/chat/completions \
     -H "Authorization: Bearer $API_KEY" \
     -H "Content-Type: application/json" \
@@ -31,7 +31,7 @@ if [ ! -f "README.md" ]; then
       "messages": [{"role": "user", "content": "'"$PROMPT"'"}],
       "max_tokens": 150
     }')
-
+  echo "Response from Open AI: $RESPONSE"
   # Extract the generated text from the API response
   GENERATED_CONTENT=$(echo $RESPONSE | jq -r '.choices[0].message.content')
 
