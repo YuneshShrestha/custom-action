@@ -3,7 +3,6 @@
 # Echo message indicating the custom action is running
 echo "This is my custom action. :@"
 
-
 # Configure Git to trust the /github/workspace directory
 git config --global --add safe.directory /github/workspace
 
@@ -28,13 +27,16 @@ if [ ! -f "README.md" ]; then
     echo "Files found: $FILE_LIST"
   fi
 
-
   echo "Prompt for GEMINI API: $PROMPT"
+
   # Call OpenAI API to get content
-  API_KEY = $OPENAI_API_KEY
-  echo "$API_KEY"
-  RESPONSE=$(curl -H 'Content-Type: application/json' -d '{"contents":[{"parts":[{"text":  "'"$PROMPT"'"}]}]}' -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$'"$API_KEY"'')
+  API_KEY=$OPENAI_API_KEY  # Remove spaces around '='
+  echo "Using API key: $API_KEY"
+  
+  RESPONSE=$(curl -H 'Content-Type: application/json' -d '{"contents":[{"parts":[{"text":  "'"$PROMPT"'"}]}]}' -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$API_KEY")
+  
   echo "Response from Open AI: $RESPONSE"
+  
   # Extract the generated text from the API response
   GENERATED_CONTENT=$(echo $RESPONSE | jq -r '.candidates[0].content.parts[0].text')
 
