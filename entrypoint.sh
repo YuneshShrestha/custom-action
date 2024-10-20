@@ -3,9 +3,14 @@
 # Echo message indicating the custom action is running
 echo "This is my custom action. :@"
 
-
 # Configure Git to trust the /github/workspace directory
 git config --global --add safe.directory /github/workspace
+
+# Navigate to the correct directory
+cd /github/workspace
+
+# Echo the current directory
+echo "Current directory: $(pwd)"
 
 # Check if README.md file exists, create it if not
 if [ ! -f "README.md" ]; then
@@ -19,14 +24,26 @@ if [ ! -f "README.md" ]; then
   PROMPT="Generate a brief description and usage instructions for the repository named '$REPO_NAME'"
 
   # List all files in the repository
-  FILE_LIST=$(ls | grep -v README.md)
+  FILE_LIST=$(ls -A | grep -v README.md)
   PROMPT="$PROMPT\n$FILE_LIST"
 
+  # Print the file list to debug
+  if [ -z "$FILE_LIST" ]; then
+    echo "No files found in the repository."
+  else
+    echo "Files found: $FILE_LIST"
+  fi
+
   echo "Prompt for GEMINI API: $FILE_LIST"
+
   # Call OpenAI API to get content
-  API_KEY=$OPENAI_API_KEY # Use the secret for the API key
-  RESPONSE=$(curl -H 'Content-Type: application/json' -d '{"contents":[{"parts":[{"text":  "'"$PROMPT"'"}]}]}' -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyB8m4NaeJHGvOFk5jg90M_RMKxoTKA7rzU')
-  echo "Response from Open AI: $RESPONSE"
+  API_KEY=$GEMINI_API_KEY # Use the secret for the API key
+  RESPONSE=$(curl -H 'Content-Type: application/json' \
+    -d '{"contents":[{"parts":[{"text":  "'"$PROMPT"'"}]}]}' \
+    -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$API_KEY")
+    
+  echo "Response from Gemini: $RESPONSE"
+  
   # Extract the generated text from the API response
   GENERATED_CONTENT=$(echo $RESPONSE | jq -r '.candidates[0].content.parts[0].text')
 
