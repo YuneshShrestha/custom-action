@@ -22,7 +22,7 @@ if [ ! -f "README.md" ]; then
   FILE_LIST=$(ls | grep -v README.md)
   PROMPT="$PROMPT\n$FILE_LIST"
 
-  echo "Prompt for GEMINI API: $PROMPT"
+  echo "Prompt for GEMINI API: $FILE_LIST"
   # Call OpenAI API to get content
   API_KEY=$OPENAI_API_KEY # Use the secret for the API key
   RESPONSE=$(curl -H 'Content-Type: application/json' -d '{"contents":[{"parts":[{"text":  "'"$PROMPT"'"}]}]}' -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyB8m4NaeJHGvOFk5jg90M_RMKxoTKA7rzU')
