@@ -31,7 +31,8 @@ if [ ! -f "README.md" ]; then
 
   echo "Prompt for GEMINI API: $PROMPT"
   # Call OpenAI API to get content
-  API_KEY=${{ secrets.OPENAI_API_KEY }}
+  API_KEY = $OPENAI_API_KEY
+  echo "$API_KEY"
   RESPONSE=$(curl -H 'Content-Type: application/json' -d '{"contents":[{"parts":[{"text":  "'"$PROMPT"'"}]}]}' -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$'"$API_KEY"'')
   echo "Response from Open AI: $RESPONSE"
   # Extract the generated text from the API response
